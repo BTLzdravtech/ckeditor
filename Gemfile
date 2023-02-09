@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gemspec
 
-gem 'rails', '5.2.4.5'
+gem 'rails', '~> 5.2.4.6'
 
 platforms :ruby do
   gem 'sass'
@@ -13,6 +13,9 @@ platforms :ruby do
     gem 'capybara', '>= 0.4.0'
     gem 'jquery-rails', '~> 4.0.4'
     gem 'mynyml-redgreen', '~> 0.7.1', require: 'redgreen'
+    gem 'rails-controller-testing'
+
+    gem 'rubocop-rails'
   end
 
   group :active_record do
