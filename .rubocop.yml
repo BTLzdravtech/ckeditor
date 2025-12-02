@@ -4,8 +4,8 @@ require:
 AllCops:
   NewCops: disable
   SuggestExtensions: false
-  TargetRubyVersion: 2.5.1
-  TargetRailsVersion: 5.2.4.6
+  TargetRubyVersion: 3.2.6
+  TargetRailsVersion: 7.2
   Exclude:
     - '**/vendor/**/*'
     - '**/db/schema.rb'
@@ -16,6 +16,15 @@ AllCops:
 ##################### Style ##################################
 
 Style/Documentation:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/RedundantParentheses:
+  Enabled: false
+
+Style/ZeroLengthPredicate:
   Enabled: false
 
 ##################### Metrics ##################################
@@ -29,7 +38,16 @@ Metrics/ClassLength:
 Metrics/ModuleLength:
   Max: 200
 
+Metrics/AbcSize:
+  Max: 25
+
 ##################### Rails ##################################
 
 Rails:
   Enabled: true
+
+Rails/LexicallyScopedActionFilter:
+  Enabled: false
+
+Rails/OutputSafety:
+  Enabled: false

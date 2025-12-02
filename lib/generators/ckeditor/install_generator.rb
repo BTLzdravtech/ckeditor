@@ -12,8 +12,8 @@ module Ckeditor
       class_option :orm, type: :string, default: 'active_record',
                          desc: 'Backend processor for upload support'
 
-      class_option :backend, type: :string, default: 'paperclip',
-                             desc: 'paperclip (default), carrierwave, refile or dragonfly'
+      class_option :backend, type: :string, default: 'active_storage',
+                             desc: 'active_storage (default), paperclip, carrierwave or dragonfly'
 
       def self.source_root
         @source_root ||= File.expand_path(File.join(File.dirname(__FILE__), 'templates'))
@@ -30,6 +30,8 @@ module Ckeditor
         if backend_dragonfly?
           template 'base/dragonfly/initializer.rb', 'config/initializers/ckeditor_dragonfly.rb'
         end
+
+        template 'base/shrine/initializer.rb', 'config/initializers/ckeditor_shrine.rb' if backend_shrine?
       end
 
       def mount_engine
@@ -37,26 +39,32 @@ module Ckeditor
       end
 
       def create_models
-        [:asset, :picture, :attachment_file].each do |filename|
+        %w[asset picture attachment_file].each do |filename|
           template "#{generator_dir}/ckeditor/#{filename}.rb",
                    File.join('app/models', ckeditor_dir, "#{filename}.rb")
         end
+      end
 
+      def create_uploaders
         if backend_carrierwave?
-          template "#{uploaders_dir}/uploaders/ckeditor_attachment_file_uploader.rb",
+          template "#{uploaders_dir}/ckeditor_attachment_file_uploader.rb",
                    File.join('app/uploaders', 'ckeditor_attachment_file_uploader.rb')
 
-          template "#{uploaders_dir}/uploaders/ckeditor_picture_uploader.rb",
+          template "#{uploaders_dir}/ckeditor_picture_uploader.rb",
                    File.join('app/uploaders', 'ckeditor_picture_uploader.rb')
         end
+
+        return unless backend_shrine?
+
+        template "#{uploaders_dir}/ckeditor_attachment_uploader.rb",
+                 File.join('app/uploaders', 'ckeditor_attachment_uploader.rb')
       end
 
       def create_ckeditor_migration
-        if ['active_record'].include?(orm)
-          migration_template "#{generator_dir}/#{migration_file}.rb",
-                             File.join('db/migrate', 'create_ckeditor_assets.rb'),
-                             migration_version: migration_version
-        end
+        return unless ['active_record'].include?(orm)
+
+        migration_template "#{generator_dir}/create_ckeditor_assets.rb",
+                           File.join('db/migrate', 'create_ckeditor_assets.rb')
       end
 
       protected
@@ -78,7 +86,7 @@ module Ckeditor
       end
 
       def uploaders_dir
-        @uploaders_dir ||= 'base/carrierwave'
+        @uploaders_dir ||= "base/#{backend}/uploaders"
       end
 
       def orm
@@ -86,7 +94,7 @@ module Ckeditor
       end
 
       def backend
-        (options[:backend] || 'paperclip').to_s
+        (options[:backend] || 'active_storage').to_s
       end
 
       def rails5?

@@ -27,7 +27,7 @@ module Ckeditor
       # This takes the same arguments as +authorize+. The difference is that this will
       # return a boolean whereas +authorize+ will raise an exception when not authorized.
       def authorized?(action, model_object = nil)
-        Pundit.policy(@controller.current_user_for_pundit, model_object).public_send(action + '?') if action
+        Pundit.policy(@controller.current_user_for_pundit, model_object).public_send("#{action}?") if action
       end
 
       module ControllerExtension
@@ -41,4 +41,4 @@ module Ckeditor
   end
 end
 
-Ckeditor::AUTHORIZATION_ADAPTERS[:pundit] = Ckeditor::Hooks::PunditAuthorization
+Ckeditor.authorization_adapters[:pundit] = Ckeditor::Hooks::PunditAuthorization

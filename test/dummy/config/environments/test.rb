@@ -35,5 +35,5 @@ Dummy::Application.configure do
 
   config.active_support.test_order = :sorted
 
-  config.active_record.raise_in_transactional_callbacks = true
+  config.assets.precompile += %w( ckeditor/application.css ckeditor/application.js application.css )
 end

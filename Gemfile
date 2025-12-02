@@ -2,19 +2,16 @@ source 'http://rubygems.org'
 
 gemspec
 
-gem 'rails', '~> 5.2.4.6'
+gem 'rails', '~> 7.2'
 
 platforms :ruby do
   gem 'sass'
-  gem 'sqlite3', '~> 1.3.6'
-  gem 'sprockets', '~> 3.7.2'
+  gem 'sassc'
+  gem 'sprockets-rails'
+  gem 'sqlite3'
 
   group :development, :test do
-    gem 'capybara', '>= 0.4.0'
-    gem 'jquery-rails', '~> 4.0.4'
-    gem 'mynyml-redgreen', '~> 0.7.1', require: 'redgreen'
-    gem 'rails-controller-testing'
-
+    gem 'capybara'
     gem 'rubocop-rails'
   end
 
@@ -22,15 +19,15 @@ platforms :ruby do
     gem 'carrierwave'
     gem 'dragonfly'
     gem 'mini_magick'
-    gem 'paperclip', '~> 5.2.0'
-    gem 'refile', require: 'refile/rails'
-    gem 'refile-mini_magick'
+    # gem 'paperclip', '~> 6.1.0'
   end
 
   group :mongoid do
-    gem 'bson_ext'
     gem 'carrierwave-mongoid', require: 'carrierwave/mongoid'
-    gem 'mongoid', '~> 5.0.0'
-    gem 'mongoid-paperclip', require: 'mongoid_paperclip'
+    gem 'mongoid'
+    # gem 'mongoid-paperclip', require: 'mongoid_paperclip'
+    gem 'image_processing'
+    gem 'shrine'
+    gem 'shrine-mongoid'
   end
 end

@@ -1,5 +1,7 @@
-class CreatePosts < ActiveRecord::Migration
-  def self.up
+# frozen_string_literal: true
+
+class CreatePosts < ActiveRecord::Migration[6.1]
+  def up
     create_table :posts do |t|
       t.string :title
       t.text :info

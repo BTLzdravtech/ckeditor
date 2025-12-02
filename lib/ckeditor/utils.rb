@@ -9,7 +9,7 @@ module Ckeditor
 
     class << self
       def escape_single_quotes(str)
-        str.gsub('\\', '\0\0').gsub('</', '<\/').gsub(/\r\n|\n|\r/, "\\n").gsub(/["']/) { |m| "\\#{m}" }
+        str.gsub('\\', '\0\0').gsub('</', '<\/').gsub(/\r\n|\n|\r/, '\\n').gsub(/["']/) { |m| "\\#{m}" }
       end
 
       def js_replace(dom_id, options = nil)
@@ -36,10 +36,10 @@ module Ckeditor
         options = { multiple: true, element: 'fileupload' }.merge!(options)
 
         case uploader_type.to_s.downcase
-        when 'image' then
+        when 'image'
           options[:action] = JavascriptCode.new('EDITOR.config.filebrowserImageUploadUrl')
           options[:allowedExtensions] = Ckeditor.image_file_types
-        when 'flash' then
+        when 'flash'
           options[:action] = JavascriptCode.new('EDITOR.config.filebrowserFlashUploadUrl')
           options[:allowedExtensions] = Ckeditor.flash_file_types
         else
@@ -73,40 +73,11 @@ module Ckeditor
         end
       end
 
-      def select_assets(path, relative_path)
-        relative_folder = Ckeditor.root_path.join(relative_path)
-        folder = relative_folder.join(path)
-        extensions = '*.{js,css,png,gif,jpg,html}'
-        languages = (Ckeditor.assets_languages || [])
-
-        # Files at root
-        files = Dir[folder.join(extensions)]
-
-        # Filter plugins
-        if Ckeditor.assets_plugins.nil?
-          files += Dir[folder.join('plugins', '**', extensions)]
+      def call_or_return(value, default)
+        if value.respond_to? :call
+          value.call
         else
-          Ckeditor.assets_plugins.each do |plugin|
-            files += Dir[folder.join('plugins', plugin, '**', extensions)]
-          end
-        end
-
-        # Other folders
-        Dir[folder.join('*/')].each do |subfolder|
-          path = Pathname.new(subfolder)
-          next if ['plugins'].include?(path.basename.to_s)
-          files += Dir[path.join('**', extensions)]
-        end
-
-        files.inject([]) do |items, name|
-          file = Pathname.new(name)
-          base = file.basename('.*').to_s
-
-          if !name.include?('/lang/') || languages.include?(base) || languages.empty?
-            items << file.relative_path_from(relative_folder).to_s
-          end
-
-          items
+          value || default
         end
       end
     end

@@ -24,7 +24,7 @@ module Ckeditor
     end
 
     def ckeditor?
-      !params[:CKEditor].blank?
+      params[:CKEditor].present?
     end
 
     def file
@@ -59,7 +59,7 @@ module Ckeditor
 
     def success_default(_relative_url_root = nil)
       {
-        json: asset.to_json(only: [:id, :type])
+        json: asset.to_json(only: %i[id type])
       }
     end
 

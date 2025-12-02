@@ -32,6 +32,8 @@ CKEDITOR.editorConfig = function( config )
   config.filebrowserUploadUrl = "/ckeditor/attachment_files";
 
   config.allowedContent = true;
+  config.filebrowserUploadMethod = 'form';
+  config.versionCheck = false;
 
   // Toolbar groups configuration.
   config.toolbar = [

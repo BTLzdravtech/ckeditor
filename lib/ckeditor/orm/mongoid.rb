@@ -19,7 +19,7 @@ module Ckeditor
           end
 
           def as_json_methods
-            [:id, :type] + super
+            %i[id type] + super
           end
         end
 
