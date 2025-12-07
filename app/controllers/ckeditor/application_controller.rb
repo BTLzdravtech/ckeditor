@@ -1,4 +1,4 @@
-class Ckeditor::ApplicationController < Ckeditor.parent_controller.constantize
+class Ckeditor::ApplicationController < ApplicationController
   layout Ckeditor.controller_layout
 
   before_action :find_asset, only: [:destroy]
