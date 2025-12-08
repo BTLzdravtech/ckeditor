@@ -75,6 +75,12 @@ module Ckeditor
   mattr_accessor :editor_version
   @editor_version = '44.1.0'
 
+  # Asset restrictions
+  mattr_accessor :assets_languages
+  mattr_accessor :assets_plugins
+  @assets_languages = nil
+  @assets_plugins = nil
+
   # CKEditor CDN javascript
   mattr_accessor :cdn_url
   @cdn_url = nil
@@ -134,7 +140,7 @@ module Ckeditor
 
   # All css and js files from ckeditor folder
   def self.assets
-    @assets ||= Ckeditor.cdn_enabled? ? ['ckeditor/config.js'] : []
+    @assets ||= Ckeditor.cdn_enabled? ? ['ckeditor/config.js'] : Utils.select_assets('ckeditor', 'vendor/assets/javascripts') << 'ckeditor/init.js'
   end
 
   def self.assets=(value)
